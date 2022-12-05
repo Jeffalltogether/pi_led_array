@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # Display a runtext with double-buffering.
 import sys
+from weather_api import wttr_weather 
+
 sys.path.append('/home/pi/display16x32/rpi-rgb-led-matrix/bindings/python/samples/')
 
 from samplebase import SampleBase
@@ -16,8 +18,16 @@ class RunText(SampleBase):
     def run(self):
         ### for clock
         offscreen_canvas = self.matrix.CreateFrameCanvas()
-        font = graphics.Font()
-        font.LoadFont("/home/pi/display16x32/rpi-rgb-led-matrix/fonts/4x6.bdf")
+        
+        clock_font = graphics.Font()
+        clock_font.LoadFont("/home/pi/display16x32/rpi-rgb-led-matrix/fonts/5x7.bdf")
+        
+        am_pm_font = graphics.Font()
+        am_pm_font.LoadFont("/home/pi/display16x32/rpi-rgb-led-matrix/fonts/4x6.bdf")
+        
+        date_wthr_font = graphics.Font()
+        date_wthr_font.LoadFont("/home/pi/display16x32/rpi-rgb-led-matrix/fonts/6x9.bdf")
+        
         date_color = graphics.Color(45, 255, 45)
         time_color = graphics.Color(0, 145, 145)
         pos = offscreen_canvas.width
@@ -37,7 +47,14 @@ class RunText(SampleBase):
             ### get date and time
             today_out = time.ctime()[0:10]
             time_out = time.strftime("%I:%M%p")
+            
+            ### get weather
+            if prev_min == 0:
+                wthr_dict = wttr_weather('Irving, Texas, United States')
 
+            ### combine date and weather
+            date_wthr_txt = today_out + 2*' ' + wthr_dict['temperature'] + 2*' ' + wthr_dict['atmospheric_weather'] + 2*' ' + wthr_dict['wind_speed_dir']
+            
             ### clear LED matrix
             offscreen_canvas.Clear()
             
@@ -62,10 +79,11 @@ class RunText(SampleBase):
 
             ### Draw on LED matrix
             # display time as text
-            graphics.DrawText(offscreen_canvas, font, 2, 15, time_color, time_out)
+            graphics.DrawText(offscreen_canvas, clock_font, -1, 16, time_color, time_out[:-2])
+            graphics.DrawText(offscreen_canvas, am_pm_font, 25, 16, time_color, time_out[-2:])
             
-            # scroll through the date text
-            len = graphics.DrawText(offscreen_canvas, font, pos, 7, date_color, today_out)
+            # scroll through the date and weather text
+            len = graphics.DrawText(offscreen_canvas, date_wthr_font, pos, 8, date_color, date_wthr_txt)
             pos -= 1
             if (pos + len < 0):
                 pos = offscreen_canvas.width

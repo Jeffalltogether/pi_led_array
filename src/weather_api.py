@@ -1,20 +1,37 @@
 #!/usr/bin/env python
-'''
-Weather forcast with python
-By: Ayushi Rawat
-'''
-
 import requests
+import re
 
-city = 'Irving, Texas, United States'
-print(city)
+def get_weather_as_text(city):
+	url = 'https://wttr.in/{}?AT'.format(city)
+	res = requests.get(url)
+	return(res.text)
 
-url = 'https://wttr.in/{}?AT'.format(city)
-res = requests.get(url)
+def get_values(w_str):
+	w_list = w_str.split('\n')
 
-print(res.text)
+	# see all the text
+	#for s in w_list:
+	#	print(s[14:])
+	space_chr = re.compile(r'\s+')
+	
+	curr_values_dict = {
+		'atmospheric_weather': w_list[2][14:].strip(),
+		'temperature': w_list[3][14:].strip(),
+		'wind_speed_dir': re.sub(space_chr, '', w_list[4][14:])
+		}
+		
+	return curr_values_dict
 
-#print("23", chr(176), 'happy', sep = '')
+def wttr_weather(location):
+	weather_str = get_weather_as_text(location)
+	
+	curr_weather_params = get_values(weather_str)
+	
+	return curr_weather_params
+	
 
-#print(int(res.text[144:147].strip()))
-#print('temperature: ', temperature, chr(176), 'F', sep='')
+if __name__ == '__main__':
+	my_report = wttr_weather('Irving, Texas, United States')
+	print(my_report)
+	

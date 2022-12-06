@@ -11,4 +11,4 @@ The library that drives the display must be installed
 https://github.com/hzeller/rpi-rgb-led-matrix  
 
 # Run clock  
-sudo python my_clock.py -r=16 --led-cols=32 -b=15  
+sudo python my_clock.py -r=16 --led-cols=32 -b=25  

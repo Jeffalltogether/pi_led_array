@@ -101,6 +101,22 @@ class RunText(SampleBase):
 
             offset_canvas = self.matrix.SwapOnVSync(offset_canvas)
             iters+=1
+            
+    def download_weather(self, location='Irving, Texas, United States', curr_wthr_dict=None):
+        try:
+            wthr_as_dict = wttr_weather(location)
+        except:
+            # typically a `requests.exceptions.ConnectionError` will occur
+            if not curr_wthr_dict:
+                # if it fals the first time, we generate an empty dict
+                wthr_as_dict = {'atmospheric_text': '', 'temperature': '',
+                                'humidity': '', 'better_wind_speed': ''}
+            else:
+                # if it fails a subsequent time, we return the current data
+                return curr_wthr_dict
+                           
+        return wthr_as_dict
+        
 
     def run(self):
         ### for clock
@@ -120,8 +136,7 @@ class RunText(SampleBase):
         pos = offscreen_canvas.width
                 
         # download weather
-        wthr_dict = wttr_weather('Irving, Texas, United States')
-        
+        wthr_dict = self.download_weather()
         # set minute counter
         prev_min = -1
         while True:
@@ -131,8 +146,9 @@ class RunText(SampleBase):
             time_out = time.strftime("%I:%M%p")
             
             ### update weather
-            if prev_min == 7:
-                wthr_dict = wttr_weather('Irving, Texas, United States')
+            if prev_min in [5,35]:
+                wthr_dict = self.download_weather('Irving, Texas, United States', wthr_dict)
+                time.sleep(10)
 
             ### combine date and weather
             date_wthr_txt = day_mo_date[0] + ' ' + \
@@ -140,17 +156,17 @@ class RunText(SampleBase):
                             day_mo_date[2] + ' ' + \
                             wthr_dict['atmospheric_text'] + ' ' + \
                             wthr_dict['temperature'] + ' ' + \
-                            wthr_dict['humidity'] + 'Hum. ' + \
+                            wthr_dict['humidity'] + ' ' + \
                             wthr_dict['better_wind_speed']
             
             ### clear LED matrix
             offscreen_canvas.Clear()
             
             ### triger graphics
-            if (int(time_out[-4:-2]) in [15,45]) & (int(time_out[-3]) != prev_min):
+            if (int(time_out[-4:-2]) in [15,45]) & (int(time_out[-4:-2]) != prev_min):
                 self.gradient_fill()
                 
-            if (int(time_out[-4:-2]) in [0,30]) & (int(time_out[-3]) != prev_min):
+            if (int(time_out[-4:-2]) in [0,30]) & (int(time_out[-4:-2]) != prev_min):
                 self.rotating_block()
 
             ### Draw on LED matrix
@@ -165,13 +181,13 @@ class RunText(SampleBase):
                 pos = offscreen_canvas.width
             
             ### set delay time before entering loop again
-            time.sleep(0.1)
+            time.sleep(0.075)
             
             ### ???
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
             
             ### set previous time to current time
-            prev_min = int(time_out[-3])
+            prev_min = int(time_out[-4:-2])
 
 
 # Main function

@@ -32,7 +32,7 @@ def simple_weather_as_text(city):
 	curr_values_dict = {
 		'atmospheric_symbol': w_list[0].strip('" '),
 		'temperature': w_list[1],
-		'humidity': w_list[2],
+		'humidity': w_list[2] + 'RH',
 		'wind_speed': w_list[3],
 		'pressure': w_list[4],
 		'precipitation': w_list[5],

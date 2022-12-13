@@ -2,13 +2,14 @@
 # Display a runtext with double-buffering.
 import sys
 import math
+import time
 from weather_api import wttr_weather 
 
 sys.path.append('/home/pi/display16x32/rpi-rgb-led-matrix/bindings/python/samples/')
 
 from samplebase import SampleBase
 from rgbmatrix import graphics
-import time
+
 
 
 

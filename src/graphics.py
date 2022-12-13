@@ -2,6 +2,7 @@
 import time
 import sys
 import numpy as np
+import concurrent.futures
 
 sys.path.append('/home/pi/display16x32/rpi-rgb-led-matrix/bindings/python/samples/')
 
@@ -93,6 +94,38 @@ class GraphicsTest(SampleBase):
                         for k in range(delay):
                             self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
         return
+    
+    def rain_drop(self, color, delay_options, twice_height, fade):
+        '''
+        pre-calculate as many arguments as possible to speed runtime
+        ''' 
+        s=np.random.choice([0.25,0.5,0.75,1.0])  
+        time.sleep(s)
+             
+        i = np.random.choice(self.matrix.width)
+        
+        #delay = np.random.choice(delay_options, 1)[0]
+
+        for j in range(0,twice_height,1):
+            for k in range(self.matrix.height):
+                self.offscreen_canvas.SetPixel(i, j-k, color[0]-fade[k], color[1]-fade[k], color[2]-fade[k])
+
+            #for d in range(delay):
+            self.offscreen_canvas = self.matrix.SwapOnVSync(self.offscreen_canvas)
+                
+        return
+        
+    def rain(self, color=[255,255,255]):
+        delay_options = [4,5,6]
+        twice_height=self.matrix.height*2
+        fade=[np.min([25*k,255]) for k in range(self.matrix.height)]
+        
+        self.offscreen_canvas = self.matrix.CreateFrameCanvas()
+        with concurrent.futures.ThreadPoolExecutor(max_workers = 12) as executor:
+            while True:
+                executor.submit(self.rain_drop, color, delay_options, twice_height, fade)
+            
+        return
         
     def run(self):
         color_list = [ [205,3,254],
@@ -101,8 +134,9 @@ class GraphicsTest(SampleBase):
                        [50,242,49],
                        [5,25,242]]
         
-        self.random_bars(color_list, 2)
-        #self.fill_from_left(color_list, 3)
+        # self.random_bars(color_list, 2)
+        # self.fill_from_left(color_list, 3)
+        self.rain()
         
         return
 

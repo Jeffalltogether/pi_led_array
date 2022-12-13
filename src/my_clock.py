@@ -45,7 +45,7 @@ class RunText(SampleBase):
             
         return
         
-    def rotating_block(self, num_iterations = 3000):
+    def rotating_block(self, num_iterations = 6000):
         def scale_col(val, lo, hi):
             if val < lo:
                 return 0

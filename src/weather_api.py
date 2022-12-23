@@ -57,7 +57,7 @@ def complex_weather_as_text(city):
 	
 	curr_values_dict = {
 		'atmospheric_text': w_list[2][14:].strip(),
-		'better_temperature': w_list[3][14:].strip(),
+		'better_temperature': w_list[3][14:].replace(" ", ""),
 		'better_wind_speed': re.sub(space_chr, '', w_list[4][14:]),
 		'high': 'temp',
 		'low': 'temp'

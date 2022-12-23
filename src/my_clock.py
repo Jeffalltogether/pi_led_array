@@ -26,7 +26,7 @@ class RunText(GraphicsTest, SampleBase):
             # typically a `requests.exceptions.ConnectionError` will occur
             if not curr_wthr_dict:
                 # if it fails the first time, we generate an empty dict
-                wthr_as_dict = {'atmospheric_text': '', 'temperature': '',
+                wthr_as_dict = {'atmospheric_text': '', 'better_temperature': '',
                                 'humidity': '', 'better_wind_speed': ''}
                                 
                 color_dict = {'temp_color': [0,0,0], 'humid_color': [0,0,0], 'wind_color': [0,0,0]}
@@ -38,7 +38,7 @@ class RunText(GraphicsTest, SampleBase):
                 
                 
         # get color values:
-        temp_as_int = int(re.findall(r'\d+',wthr_as_dict['temperature'])[0])
+        temp_as_int = int(re.findall(r'\d+',wthr_as_dict['better_temperature'])[0])
         humid_as_int = int(re.findall(r'\d+',wthr_as_dict['humidity'])[0])
         wind_as_int = int(re.findall(r'\d+',wthr_as_dict['better_wind_speed'])[0])
         # print('as_int:{}, {}, {}'.format(temp_as_int, humid_as_int, wind_as_int))
@@ -64,11 +64,11 @@ class RunText(GraphicsTest, SampleBase):
             return [int(255*v) for v in bgra[:-1]]
             
         if colormap == 'humid':
-            bgra = cm.cool(value)
+            bgra = cm.Spectral(value)
             return [int(255*v) for v in bgra[:-1]]            
             
         if colormap == 'wind':
-            bgra = cm.RdYlGn(value)
+            bgra = cm.jet(value)
             return [int(255*v) for v in bgra[:-1]]             
 
             
@@ -106,7 +106,7 @@ class RunText(GraphicsTest, SampleBase):
                             day_mo_date[2] + ' ' + \
                             wthr_dict['atmospheric_text'] + ' '
                             
-        temperature_txt = wthr_dict['temperature'] + ' '
+        temperature_txt = wthr_dict['better_temperature'] + ' '
         rel_humidity = wthr_dict['humidity'] + ' '
         wind_speed = wthr_dict['better_wind_speed']
             
@@ -129,7 +129,7 @@ class RunText(GraphicsTest, SampleBase):
                                   day_mo_date[2] + ' ' + \
                                   wthr_dict['atmospheric_text'] + ' '
                             
-                temperature_txt = wthr_dict['temperature'] + ' '
+                temperature_txt = wthr_dict['better_temperature'] + ' '
                 rel_humidity = wthr_dict['humidity'] + ' '
                 wind_speed = wthr_dict['better_wind_speed']
                 time.sleep(2)

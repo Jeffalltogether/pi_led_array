@@ -46,7 +46,7 @@ class RunText(GraphicsTest, SampleBase):
         color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,10,110,'temp'),
                       'humid_color': self.get_rgb_from_colormap(humid_as_int,0,100,'humid'),
                       'wind_color': self.get_rgb_from_colormap(wind_as_int,0,35,'wind')}
-        print(color_dict)
+        #print(color_dict)
         
         return wthr_as_dict, color_dict
         
@@ -57,7 +57,7 @@ class RunText(GraphicsTest, SampleBase):
             value = maximum
         else:
             value = (scalar-minimum) * (256/(maximum-minimum))
-        print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
+        #print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
             
         if colormap == 'temp':
             bgra = cm.rainbow(value) # values returned appear to be BGR ordered

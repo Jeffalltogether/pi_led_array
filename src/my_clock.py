@@ -142,7 +142,7 @@ class RunText(GraphicsTest, SampleBase):
                 self.random_bars(watermellon_color_list, delay = 5,  num_iterations = 1)
 
             if (int(time_out[-4:-2]) in [30]) & (int(time_out[-4:-2]) != prev_min):
-                self.rain_storm(num_drops=350, delay = 0.05, color=[0,0,0], dim_by=45)
+                self.rain_storm(num_drops=350, delay = 0.05, color=[255,255,255], dim_by=45)
                                 
             if (int(time_out[-4:-2]) in [0]) & (int(time_out[-4:-2]) != prev_min):
                 self.rotating_block()

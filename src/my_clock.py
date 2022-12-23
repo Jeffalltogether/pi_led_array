@@ -46,7 +46,7 @@ class RunText(GraphicsTest, SampleBase):
         color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,10,110,'temp'),
                       'humid_color': self.get_rgb_from_colormap(humid_as_int,0,100,'humid'),
                       'wind_color': self.get_rgb_from_colormap(wind_as_int,0,35,'wind')}
-        # print(color_dict)
+        print(color_dict)
         
         return wthr_as_dict, color_dict
         
@@ -57,18 +57,18 @@ class RunText(GraphicsTest, SampleBase):
             value = maximum
         else:
             value = (scalar-minimum) * (256/(maximum-minimum))
-        #print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
+        print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
             
         if colormap == 'temp':
             bgra = cm.rainbow(value) # values returned appear to be BGR ordered
             return [int(255*v) for v in bgra[:-1]]
             
         if colormap == 'humid':
-            bgra = cm.Spectral(value)
+            bgra = cm.gist_rainbow(value)
             return [int(255*v) for v in bgra[:-1]]            
             
         if colormap == 'wind':
-            bgra = cm.jet(value)
+            bgra = cm.gist_ncar(value)
             return [int(255*v) for v in bgra[:-1]]             
 
             
@@ -77,7 +77,7 @@ class RunText(GraphicsTest, SampleBase):
         watermellon_color_list = [[243,85,136],[255,187,180],[113,169,90],[0,121,68]]
         
         ### run a graphic
-        #self.random_bars(watermellon_color_list, delay = 5,  num_iterations = 1)
+        self.random_bars(watermellon_color_list, delay = 5,  num_iterations = 1)
         
         ### for clock
         offscreen_canvas = self.matrix.CreateFrameCanvas()
@@ -161,7 +161,7 @@ class RunText(GraphicsTest, SampleBase):
                                       graphics.Color(color_dict['humid_color'][2],color_dict['humid_color'][1],color_dict['humid_color'][0]), 
                                       rel_humidity) 
             Len_4 = graphics.DrawText(offscreen_canvas, date_wthr_font, pos+Len_1+Len_2+Len_3, 8, 
-                                      graphics.Color(color_dict['wind_color'][0],color_dict['wind_color'][1],color_dict['wind_color'][2]), 
+                                      graphics.Color(color_dict['wind_color'][2],color_dict['wind_color'][1],color_dict['wind_color'][0]), 
                                       wind_speed)
 
             # iterate position var

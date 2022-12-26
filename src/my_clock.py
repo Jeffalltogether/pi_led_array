@@ -43,9 +43,9 @@ class RunText(GraphicsTest, SampleBase):
         wind_as_int = int(re.findall(r'\d+',wthr_as_dict['better_wind_speed'])[0])
         # print('as_int:{}, {}, {}'.format(temp_as_int, humid_as_int, wind_as_int))
         
-        color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,10,110,'temp'),
+        color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,15,110,'temp'),
                       'humid_color': self.get_rgb_from_colormap(humid_as_int,0,100,'humid'),
-                      'wind_color': self.get_rgb_from_colormap(wind_as_int,0,35,'wind')}
+                      'wind_color': self.get_rgb_from_colormap(wind_as_int,-10,25,'wind')}
         #print(color_dict)
         
         return wthr_as_dict, color_dict
@@ -64,11 +64,11 @@ class RunText(GraphicsTest, SampleBase):
             return [int(255*v) for v in bgra[:-1]]
             
         if colormap == 'humid':
-            bgra = cm.gist_rainbow(value)
+            bgra = cm.Spectral(value)
             return [int(255*v) for v in bgra[:-1]]            
             
         if colormap == 'wind':
-            bgra = cm.gist_ncar(value)
+            bgra = cm.rainbow(value)
             return [int(255*v) for v in bgra[:-1]]             
 
             

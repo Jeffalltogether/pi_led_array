@@ -29,11 +29,11 @@ class RunText(GraphicsTest, SampleBase):
                 wthr_as_dict = {'atmospheric_text': '', 'better_temperature': '',
                                 'humidity': '', 'better_wind_speed': ''}
                                 
-                color_dict = {'temp_color': [0,0,0], 'humid_color': [0,0,0], 'wind_color': [0,0,0]}
+                color_dict = {'temp_color': [255,255,255], 'humid_color': [255,255,255], 'wind_color': [255,255,255]}
                 
                 return wthr_as_dict, color_dict
             else:
-                # if it fails a subsequent time, we return the current data
+                # if it fails, but the variables curr_[...] are not None, we return the curr_[...] variables
                 return curr_wthr_dict, curr_color_dict
                 
                 
@@ -56,11 +56,11 @@ class RunText(GraphicsTest, SampleBase):
         elif scalar >= maximum:
             value = maximum
         else:
-            value = (scalar-minimum) * (256/(maximum-minimum))
+            value = (scalar-minimum) * (1/(maximum-minimum))
         #print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
             
         if colormap == 'temp':
-            bgra = cm.rainbow(value) # values returned appear to be BGR ordered
+            bgra = cm.rainbow(value) # values returned are RGBa ordered where a is the alpha (transparency)
             return [int(255*v) for v in bgra[:-1]]
             
         if colormap == 'humid':
@@ -123,7 +123,7 @@ class RunText(GraphicsTest, SampleBase):
             if (int(time_out[-4:-2]) in [1,16,31,46]) & (int(time_out[-4:-2]) != prev_min):
                 day_mo_date = [i for i in time.ctime()[0:10].split()]
                 wthr_dict, color_dict = self.download_weather('Irving, Texas, United States', wthr_dict, color_dict)
-                
+
                 date_atmosphere = day_mo_date[0] + ' ' + \
                                   day_mo_date[1] + ', ' + \
                                   day_mo_date[2] + ' ' + \
@@ -155,13 +155,13 @@ class RunText(GraphicsTest, SampleBase):
             # scroll through the date and weather text
             Len_1 = graphics.DrawText(offscreen_canvas, date_wthr_font, pos, 8, date_color, date_atmosphere)
             Len_2 = graphics.DrawText(offscreen_canvas, date_wthr_font, pos+Len_1, 8, 
-                                      graphics.Color(color_dict['temp_color'][2],color_dict['temp_color'][1],color_dict['temp_color'][0]), 
+                                      graphics.Color(color_dict['temp_color'][0],color_dict['temp_color'][1],color_dict['temp_color'][2]), 
                                       temperature_txt)
             Len_3 = graphics.DrawText(offscreen_canvas, date_wthr_font, pos+Len_1+Len_2, 8, 
-                                      graphics.Color(color_dict['humid_color'][2],color_dict['humid_color'][1],color_dict['humid_color'][0]), 
+                                      graphics.Color(color_dict['humid_color'][0],color_dict['humid_color'][1],color_dict['humid_color'][2]), 
                                       rel_humidity) 
             Len_4 = graphics.DrawText(offscreen_canvas, date_wthr_font, pos+Len_1+Len_2+Len_3, 8, 
-                                      graphics.Color(color_dict['wind_color'][2],color_dict['wind_color'][1],color_dict['wind_color'][0]), 
+                                      graphics.Color(color_dict['wind_color'][0],color_dict['wind_color'][1],color_dict['wind_color'][2]), 
                                       wind_speed)
 
             # iterate position var

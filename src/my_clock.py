@@ -43,9 +43,9 @@ class RunText(GraphicsTest, SampleBase):
         wind_as_int = int(re.findall(r'\d+',wthr_as_dict['better_wind_speed'])[0])
         # print('as_int:{}, {}, {}'.format(temp_as_int, humid_as_int, wind_as_int))
         
-        color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,15,110,'temp'),
+        color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,10,105,'temp'),
                       'humid_color': self.get_rgb_from_colormap(humid_as_int,0,100,'humid'),
-                      'wind_color': self.get_rgb_from_colormap(wind_as_int,-10,25,'wind')}
+                      'wind_color': self.get_rgb_from_colormap(wind_as_int,0,33,'wind')}
         #print(color_dict)
         
         return wthr_as_dict, color_dict
@@ -60,16 +60,26 @@ class RunText(GraphicsTest, SampleBase):
         #print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
             
         if colormap == 'temp':
-            bgra = cm.rainbow(value) # values returned are RGBa ordered where a is the alpha (transparency)
-            return [int(255*v) for v in bgra[:-1]]
+            temperature_colors = [[255,255,255], [230,0,250], [0,0,255],
+                                  [100,149,237], [0,255,0], [255,240,0],
+                                  [250,95,0], [255,0,0]]
+            i = int(value*len(temperature_colors))                  
+            return temperature_colors[i]
             
         if colormap == 'humid':
-            bgra = cm.Spectral(value)
-            return [int(255*v) for v in bgra[:-1]]            
+            humidity_colors = [[255,128,0], [255,255,0], [51,255,51],
+                               [102,255,255], [102,178,255], [0,128,255],
+                               [0,51,255], [0,0,255]]
+            i = int(value*len(humidity_colors))                  
+            return humidity_colors[i]          
             
         if colormap == 'wind':
-            bgra = cm.rainbow(value)
-            return [int(255*v) for v in bgra[:-1]]             
+            wind_colors = [[0,153,0], [178,255,102], [255,255,0],
+                           [255,128,0], [255,0,0]]
+            i = int(value*len(wind_colors))                  
+            return wind_colors[i]    
+        
+        return [255,255,255]
 
             
     def run(self):

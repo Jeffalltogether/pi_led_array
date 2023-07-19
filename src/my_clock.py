@@ -24,6 +24,9 @@ class RunText(GraphicsTest, SampleBase):
             wthr_as_dict = wttr_weather(location)
         except:
             # typically a `requests.exceptions.ConnectionError` will occur
+            print('got an error when requesting wttr')
+            print(time.ctime())
+            
             if not curr_wthr_dict:
                 # if it fails the first time, we generate an empty dict
                 wthr_as_dict = {'atmospheric_text': '', 'better_temperature': '',
@@ -38,9 +41,22 @@ class RunText(GraphicsTest, SampleBase):
                 
                 
         # get color values:
-        temp_as_int = int(re.findall(r'\d+',wthr_as_dict['better_temperature'])[0])
-        humid_as_int = int(re.findall(r'\d+',wthr_as_dict['humidity'])[0])
-        wind_as_int = int(re.findall(r'\d+',wthr_as_dict['better_wind_speed'])[0])
+        try:
+            temp_as_int = int(re.findall(r'\d+',wthr_as_dict['better_temperature'])[0])
+            humid_as_int = int(re.findall(r'\d+',wthr_as_dict['humidity'])[0])
+            wind_as_int = int(re.findall(r'\d+',wthr_as_dict['better_wind_speed'])[0])
+            
+        except IndexError:
+            print('got an IndexError')
+            print(time.ctime())
+            print(wthr_as_dict)
+            # last traceback shows:
+            #    File "/home/pi/pi_led_array/src/my_clock.py", line 41, in download_weather
+            #    temp_as_int = int(re.findall(r'\d+',wthr_as_dict['better_temperature'])[0])
+            #    IndexError: list index out of range
+            # just return the prior data, and let's see how this works.
+            return curr_wthr_dict, curr_color_dict
+            
         # print('as_int:{}, {}, {}'.format(temp_as_int, humid_as_int, wind_as_int))
         
         color_dict = {'temp_color': self.get_rgb_from_colormap(temp_as_int,10,105,'temp'),

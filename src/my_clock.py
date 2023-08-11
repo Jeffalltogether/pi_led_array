@@ -67,12 +67,13 @@ class RunText(GraphicsTest, SampleBase):
         return wthr_as_dict, color_dict
         
     def get_rgb_from_colormap(self, scalar, minimum, maximum, colormap='temp'):
-        if scalar <= minimum: 
+        if scalar < minimum: 
             value = minimum
-        elif scalar >= maximum:
+        
+        if scalar > maximum:
             value = maximum
-        else:
-            value = (scalar-minimum) * (1/(maximum-minimum))
+        
+        value = (scalar-minimum) * (1/(maximum-minimum))
         #print('scalar {}, minimum {}, maximum {}, value {}'.format(scalar, minimum, maximum, value))
             
         if colormap == 'temp':
